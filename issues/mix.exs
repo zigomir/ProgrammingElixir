@@ -28,7 +28,8 @@ defmodule Issues.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:httpoison, "~> 0.7"}
+      {:httpoison, "~> 0.7"},
+      {:jsx,       "~> 2.6.2"}
     ]
   end
 end
