@@ -1,3 +1,4 @@
+require IEx
 defmodule Issues.CLI do
 
   @default_count 4
@@ -40,11 +41,13 @@ defmodule Issues.CLI do
     System.halt(0)
   end
 
-  def process({user, project, _count}) do
+  def process({user, project, count}) do
     Issues.GithubIssues.fetch(user, project)
     |> decode_response
     |> convert_list_of_hashdicts
     |> sort_into_ascending_order
+    |> Enum.take(count)
+    |> format_table
   end
 
   def decode_response({:ok, body}), do: body
@@ -62,6 +65,36 @@ defmodule Issues.CLI do
   def sort_into_ascending_order(list_of_issues) do
     Enum.sort list_of_issues,
               fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
+  end
+
+  def format_table(issues) do
+    issue_with_longest_id    = Enum.max_by(issues, fn(issue) -> String.length(Integer.to_string(issue["id"])) end)
+    issue_with_longest_title = Enum.max_by(issues, fn(issue) -> String.length(issue["title"]) end)
+    longest_id               = String.length Integer.to_string issue_with_longest_id["id"]
+    longest_title            = String.length issue_with_longest_title["title"]
+
+    render_header(longest_id, longest_title) # TODO
+    render_rows(issues)
+  end
+
+  defp render_header(longest_id, longest_title) do
+    hash_spaces       = String.duplicate(" ", longest_id)
+    id_spaces         = String.duplicate("-", longest_id + 1) # one before and one after
+    created_at_spaces = String.duplicate("-", 22)
+    title_spaces      = String.duplicate("-", longest_title + 1) # one before
+
+    header            = "##{hash_spaces}| created_at           | title"
+    header_line       = "#{id_spaces}+#{created_at_spaces}+#{title_spaces}"
+
+    IO.puts header
+    IO.puts header_line
+  end
+
+  # Issues.CLI.run ["elixir-lang", "elixir"]
+  defp render_rows([]), do: :ok
+  defp render_rows([ issue | rest ]) do
+    IO.puts "#{issue["id"]} | #{issue["created_at"]} | #{issue["title"]}"
+    render_rows(rest)
   end
 
 end

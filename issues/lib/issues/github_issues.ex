@@ -6,8 +6,8 @@ defmodule Issues.GithubIssues do
   # Issues.GithubIssues.fetch("elixir-lang", "elixir")
   def fetch(user, project) do
     issues_url(user, project)
-    |> HTTPoison.get!(@user_agent) # find out why .get (without !) won't work
-    |> handle_response
+      |> HTTPoison.get!(@user_agent) # find out why .get (without !) won't work
+      |> handle_response
   end
 
   def issues_url(user, project) do
