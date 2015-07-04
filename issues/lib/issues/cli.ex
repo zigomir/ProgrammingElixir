@@ -73,7 +73,7 @@ defmodule Issues.CLI do
     longest_id               = String.length Integer.to_string issue_with_longest_id["id"]
     longest_title            = String.length issue_with_longest_title["title"]
 
-    render_header(longest_id, longest_title) # TODO
+    render_header(longest_id, longest_title)
     render_rows(issues)
   end
 
