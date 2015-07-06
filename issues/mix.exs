@@ -5,6 +5,7 @@ defmodule Issues.Mixfile do
     [app: :issues,
      version: "0.0.1",
      elixir: "~> 1.0",
+     escript: escript_config, # Binary - mix escript.build
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
@@ -14,7 +15,7 @@ defmodule Issues.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger, :httpoison]]
+    [applications: [:logger, :httpoison, :jsx]]
   end
 
   # Dependencies can be Hex packages:
@@ -31,5 +32,9 @@ defmodule Issues.Mixfile do
       {:httpoison, "~> 0.7"},
       {:jsx,       "~> 2.6.2"}
     ]
+  end
+
+  defp escript_config do
+      [ main_module: Issues.CLI ]
   end
 end
