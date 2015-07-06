@@ -15,12 +15,24 @@ defmodule Issues.TableFormatter do
     id_spaces         = String.duplicate("-", longest_id + 1) # one before and one after
     created_at_spaces = String.duplicate("-", 22)
     title_spaces      = String.duplicate("-", longest_title + 1) # one before
-
-    header            = "##{hash_spaces}| created_at           | title"
     header_line       = "#{id_spaces}+#{created_at_spaces}+#{title_spaces}"
 
-    IO.puts header
+    IO.puts header(hash_spaces)
     IO.puts header_line
+  end
+
+  @doc """
+  Renders header
+
+  ### Example
+      iex> Issues.TableFormatter.header("")
+      "#| created_at           | title"
+
+      iex> Issues.TableFormatter.header("   ")
+      "#   | created_at           | title"
+  """
+  def header(hash_spaces) do
+    "##{hash_spaces}| created_at           | title"
   end
 
   # Issues.CLI.run ["elixir-lang", "elixir"]
